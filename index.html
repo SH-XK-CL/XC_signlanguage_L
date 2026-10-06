@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <title>手语翻译 · 离线版 v6.0.0</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>手语翻译 <span class="ver">v6.0.0 离线版</span></h1>
+    <p class="subtitle">中国标准手语 · 离线识别 · 文本互译 · 语音输出</p>
+  </header>
+
+  <nav class="nav">
+    <button class="nav-btn active" data-tab="recognize">识别</button>
+    <button class="nav-btn" data-tab="dictionary">词典</button>
+    <button class="nav-btn" data-tab="translate">翻译</button>
+    <button class="nav-btn" data-tab="train">训练</button>
+  </nav>
+
+  <main>
+    <!-- 识别 -->
+    <section id="tab-recognize" class="tab active">
+      <div class="cam-wrap">
+        <video id="video" playsinline muted></video>
+        <canvas id="overlay" width="640" height="480"></canvas>
+      </div>
+      <div class="rec-controls">
+        <button id="btn-cam-start" class="primary">开启摄像头</button>
+      </div>
+      <div class="rec-result-box">
+        <div id="rec-result" class="rec-result">未开始</div>
+        <div id="rec-candidates" class="rec-candidates"></div>
+        <div id="rec-status" class="rec-status">点击「开启摄像头」后比出手势</div>
+      </div>
+      <p class="hint">提示：单手数字 0–9、你好、谢谢、我、你、好、停、和平、不 等可被实时识别；其余手势可在「词典」查阅。</p>
+    </section>
+
+    <!-- 词典 -->
+    <section id="tab-dictionary" class="tab">
+      <div class="search-bar">
+        <input id="dict-search" type="search" placeholder="搜索词 / 拼音 / 含义…" />
+      </div>
+      <div id="dict-cats" class="chips"></div>
+      <div id="dict-list" class="dict-list"></div>
+    </section>
+
+    <!-- 翻译 -->
+    <section id="tab-translate" class="tab">
+      <textarea id="trans-input" placeholder="输入中文句子，例如：你好，我想学习中国手语"></textarea>
+      <div class="trans-controls">
+        <button id="btn-trans" class="primary">翻译为手语</button>
+        <button id="btn-speak">🔊 朗读原文</button>
+      </div>
+      <div id="trans-output" class="trans-output"></div>
+    </section>
+
+  <!-- 训练 -->
+  <section id="tab-train" class="tab">
+    <p class="hint">用摄像头采集标注样本，在浏览器内训练你自己的手势识别模型（无需联网，数据存本机）。已内置一个用合成数据预训练的模型（打开即用）。</p>
+    <div class="train-bar">
+      <input id="train-word" type="text" placeholder="手势名称，如：加油" />
+      <button id="btn-train-capture" class="primary">采集10帧</button>
+    </div>
+    <div id="train-status" class="rec-status"></div>
+    <div class="train-actions">
+      <button id="btn-train-run" class="primary">训练模型</button>
+      <button id="btn-train-save">保存模型</button>
+      <button id="btn-train-load">加载已保存</button>
+      <button id="btn-train-clear" class="danger">清空样本</button>
+    </div>
+    <div id="train-count" class="train-count"></div>
+    <div id="train-samples" class="train-samples"></div>
+    <p class="hint">提示：每个手势在不同角度/距离下多采几组（每组10帧）能显著提升识别率。</p>
+  </section>
+  </main>
+
+  <footer class="app-footer">
+    <span>离线 PWA · MediaPipe Hands · 共 <b id="foot-count">0</b> 条手势</span>
+  </footer>
+
+  <!-- 数据/逻辑（经典脚本，先加载以挂载全局） -->
+  <script src="js/dictionary.js"></script>
+  <script src="js/recognizer.js"></script>
+  <script src="js/translator.js"></script>
+  <script src="js/tts.js"></script>
+  <script src="js/model.js"></script>
+  <!-- 摄像头 + MediaPipe（ES Module，先于 DOMContentLoaded 完成） -->
+  <script type="module" src="js/camera.js"></script>
+  <!-- 主逻辑 -->
+  <script src="js/app.js"></script>
+
+  <script>
+    // 写入词典总数 / 注册 Service Worker（仅 http(s) 环境生效，file:// 离线打开时跳过）
+    document.getElementById('foot-count').textContent = (window.SIGN_DICTIONARY || []).length;
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    }
+  </script>
+</body>
+</html>

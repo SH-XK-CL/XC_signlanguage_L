@@ -1,0 +1,20 @@
+{
+  "name": "手语翻译 离线版",
+  "short_name": "手语翻译",
+  "description": "中国标准手语离线识别与翻译 PWA（MediaPipe Hands）",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f1f5f9",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
