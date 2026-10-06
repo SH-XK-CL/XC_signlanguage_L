@@ -25,3 +25,7 @@ python -m http.server 8080
 
 ## 说明
 `model.json` 为合成数据预训练模型，用于验证管线；真实识别请在 App「训练」页采集本人手势样本后重训。详见 `docs/README.md`。
+
+## 许可证
+
+本项目采用 **GNU General Public License v3.0（GPL-3.0）**。详见 [LICENSE](./LICENSE)。
